@@ -17,13 +17,12 @@
 
     /* Hero Section */
     .profile-hero {
-        background-color: var(--primary-navy);
-        background-image: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-soft) 100%);
+        background-image: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
         padding: 4rem 2rem 6rem;
         color: white;
         text-align: center;
         border-radius: 0 0 3rem 3rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
         position: relative;
         z-index: 1;
     }
@@ -70,6 +69,27 @@
         display: flex;
         align-items: center;
         gap: 0.75rem;
+    }
+
+    .card-title-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: #EFF6FF;
+        color: #1E3A8A;
+        font-size: 1rem;
+    }
+
+    .profile-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(229, 231, 235, 0.9);
     }
 
     .card-title::after {
@@ -153,6 +173,53 @@
         opacity: 1;
     }
 
+    .profile-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin: -2rem auto 2rem;
+        max-width: 900px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .summary-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 16px;
+        align-items: center;
+        padding: 1.35rem 1.3rem;
+        border-radius: 18px;
+        background: white;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .summary-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: #EFF6FF;
+        color: #1E40AF;
+        font-size: 1.2rem;
+    }
+
+    .summary-content p {
+        margin: 0;
+        color: #6B7280;
+        font-size: 0.92rem;
+    }
+
+    .summary-content strong {
+        display: block;
+        margin-top: 0.35rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #111827;
+    }
+
     @media (max-width: 640px) {
         .form-row {
             grid-template-columns: 1fr;
@@ -175,6 +242,57 @@
 </div>
 
 <div class="profile-container">
+    @php
+        $user = Auth::user();
+        $graduationYear = $user->tahun_lulus ?? '-';
+        $city = $user->kota ?? 'Palembang';
+        $lastUpdated = $user->updated_at ? $user->updated_at->format('d F Y H:i') : 'Belum diperbarui';
+        $status = 'Sedang Menjadi Mahasiswa';
+
+        if (!empty($user->perusahaan)) {
+            $company = trim($user->perusahaan);
+            $position = trim($user->jabatan);
+            $status = $position
+                ? "{$position} di {$company}"
+                : "Bekerja di {$company}";
+        } elseif (!empty($user->jabatan) && str_contains(strtolower($user->jabatan), 'mahasiswa')) {
+            $status = 'Sedang Menjadi Mahasiswa';
+        } elseif (empty($user->perusahaan) && empty($user->jabatan)) {
+            $status = 'Sedang Menjadi Mahasiswa';
+        }
+    @endphp
+
+    <div class="profile-summary">
+        <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="summary-content">
+                <p>Status Alumni</p>
+                <strong>{{ $status }}</strong>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="summary-content">
+                <p>Tahun Lulus</p>
+                <strong>{{ $graduationYear }}</strong>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="summary-content">
+                <p>Domisili</p>
+                <strong>{{ $city }}</strong>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-clock"></i></div>
+            <div class="summary-content">
+                <p>Terakhir Diperbarui</p>
+                <strong>{{ $lastUpdated }}</strong>
+            </div>
+        </div>
+    </div>
+
     <form method="post" action="{{ route('alumni.profile.update') }}">
         @csrf
         @method('patch')

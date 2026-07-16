@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -31,13 +32,22 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['nullable', 'string', 'max:40', 'unique:'.User::class.',username'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $username = $request->input('username');
+
+        if (blank($username)) {
+            $username = $this->generateUsername($request->name, $request->email);
+        }
+
         $user = User::create([
             'name' => $request->name,
+            'username' => $username,
             'email' => $request->email,
+            'role' => 'alumni',
             'password' => Hash::make($request->password),
         ]);
 
@@ -45,6 +55,26 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect()->route('alumni.dashboard');
+    }
+
+    protected function generateUsername(string $name, string $email): string
+    {
+        $base = Str::slug(Str::before($name, ' '), '-');
+
+        if (blank($base)) {
+            $base = Str::before(Str::lower(Str::before($email, '@')), '@');
+        }
+
+        $base = Str::lower($base ?: 'alumni');
+        $candidate = $base;
+        $counter = 1;
+
+        while (User::where('username', $candidate)->exists()) {
+            $candidate = $base.'-'.$counter;
+            $counter++;
+        }
+
+        return $candidate;
     }
 }

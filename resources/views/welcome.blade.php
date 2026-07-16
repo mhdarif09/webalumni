@@ -1,349 +1,388 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Website Alumni SMA Bina Warga 1 Palembang</title>
+    <title>Sistem Informasi Alumni SMA Bina Warga 1 Palembang</title>
 
-    <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary-navy: #34495E;
-            --primary-navy-light: #455A64;
-            --accent-navy: #34495E;
-            --accent-navy-hover: #2C3E50;
-            --bg-navy-medium: #34495E; /* Medium Navy / Wet Asphalt */
-            --bg-navy-dark: #2C3E50;
-            --bg-light: #f8fafc;
-            --text-white: #ffffff;
-            --text-light: #f1f5f9;
-            --text-muted-light: #cbd5e1;
+            --page-bg: #f8fafc;
+            --panel-bg: #ffffff;
+            --panel-alt: #eeeeee;
+            --border-light: #dbeafe;
+            --text-dark: #0f172a;
+            --text-medium: #475569;
+            --text-muted: #64748b;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: rgba(37, 99, 235, 0.12);
         }
 
         body {
+            margin: 0;
+            min-height: 100vh;
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-navy-medium);
-            color: var(--text-white);
-            overflow-x: hidden;
+            background: linear-gradient(180deg, #eff6ff 0%, #f8fafc 100%);
+            color: var(--text-dark);
         }
 
-        h1, h2, h3, h4, h5, .navbar-brand {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .navbar {
-            padding: 1.25rem 0;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            color: var(--primary-navy) !important;
-            letter-spacing: -0.025em;
-        }
-
-        .nav-link {
-            color: var(--text-dark) !important;
-            font-weight: 500;
-            margin: 0 0.5rem;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-navy) !important;
-        }
-
-        .hero {
-            padding: 100px 0 80px;
-            background: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-        }
-
-        .hero-tagline {
-            color: var(--text-white);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.875rem;
-            margin-bottom: 1rem;
-            opacity: 0.9;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            line-height: 1.1;
-            font-weight: 700;
-            color: var(--text-white);
-            margin-bottom: 1.5rem;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted-light);
-            line-height: 1.6;
-            max-width: 540px;
-            margin-bottom: 2.5rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-navy);
-            border-color: var(--primary-navy);
-            padding: 0.875rem 2rem;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-navy-light);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
-        }
-
-        .btn-navy {
-            background-color: var(--primary-navy);
-            color: white;
-            border: none;
-            padding: 0.875rem 2rem;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            transition: all 0.2s ease;
-        }
-
-        .btn-navy:hover {
-            background-color: var(--accent-navy-hover);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
-        }
-
-        /* Modern Login Card */
-        .login-card {
-            border: none;
-            border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-            background: white;
-            padding: 2.5rem;
-        }
-
-        .form-control {
-            border: 1px solid #e2e8f0;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-navy);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.2);
-        }
-
-        .feature-card {
-            border: none;
-            border-radius: 1.25rem;
-            background: white;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(30, 58, 138, 0.1);
-            color: var(--primary-navy);
-            border-radius: 0.75rem;
+        .page-shell {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            padding: 2rem;
         }
 
-        footer {
-            background-color: var(--bg-navy-dark);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 4rem 0 2rem;
+        .auth-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: min(100%, 1120px);
+            gap: 2rem;
+            background: var(--panel-bg);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.12);
         }
 
-        .footer-brand {
-            font-family: 'Outfit', sans-serif;
+        .auth-side {
+            background: var(--panel-alt);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .brand-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.15rem;
+            border-radius: 18px;
+            background: #ffffff;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            width: fit-content;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            color: white;
+            overflow: hidden;
+        }
+
+        .brand-icon .brand-logo {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: inherit;
+        }
+
+        .brand-label {
+            margin: 0;
+            font-size: 0.75rem;
             font-weight: 700;
-            color: var(--text-white);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            display: block;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--primary);
         }
 
-        [x-cloak] { display: none !important; }
+        .brand-title {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 3vw, 3.5rem);
+            line-height: 1.02;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .brand-text {
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--text-medium);
+            max-width: 520px;
+        }
+
+        .login-side {
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-panel {
+            width: 100%;
+            max-width: 440px;
+            border-radius: 28px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 24px 55px rgba(15, 23, 42, 0.08);
+            padding: 2.25rem;
+            background: var(--panel-bg);
+        }
+
+        .login-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+
+        .login-title {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .login-subtitle {
+            margin: 0.35rem 0 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.65rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+            background: #ffffff;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            display: grid;
+            place-items: center;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .input-icon svg {
+            display: block;
+            line-height: 1;
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            font-size: 0.92rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.18);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .login-note {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .login-note a {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .alert-box {
+            border-radius: 18px;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            background: rgba(254, 226, 226, 0.65);
+            color: #991b1b;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 991.98px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .page-shell {
+                padding: 1rem;
+            }
+
+            .auth-side,
+            .login-side {
+                padding: 1.5rem;
+            }
+
+            .brand-title {
+                font-size: 2.25rem;
+            }
+
+            .login-panel {
+                padding: 2rem;
+            }
+        }
     </style>
 </head>
 <body>
-
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
-        @auth
-            <a class="navbar-brand" href="#">Alumni Bina Warga 1 Palembang</a>
-        @else
-            <a class="navbar-brand" href="#">Sistem Informasi Alumni</a>
-        @endauth
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            @auth
-                <ul class="navbar-nav align-items-center gap-2">
-                    <li class="nav-item"><a class="nav-link text-white" href="{{ url('/') }}">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="{{ url('/dashboard') }}">Dashboard</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-light px-4 py-2" style="border-radius: 0.75rem;">Keluar</button>
-                        </form>
-                    </li>
-                </ul>
-            @else
-                <ul class="navbar-nav align-items-center">
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Tentang Kami</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Bantuan</a></li>
-                    <li class="nav-item ms-lg-3">
-                        <button @click="loginOpen = true; $nextTick(() => document.getElementById('email').focus())" class="btn btn-navy px-4 py-2 border border-white">Login Member</button>
-                    </li>
-                </ul>
-            @endauth
-        </div>
-    </div>
-</nav>
-
-<!-- Hero Section -->
-<section class="hero overflow-hidden" x-data="{ loginOpen: false }">
-    <div class="container">
-        <div class="row align-items-center g-5">
-            <!-- Left Side: Copywriting -->
-            <div class="col-lg-7" :class="loginOpen && 'd-none d-lg-block'">
-                <div class="hero-tagline">Sistem Terpusat Database Alumni</div>
-                <h1>Portal Pendataan <br class="d-none d-md-block"> Alumni SMA Bina Warga 1 Palembang</h1>
-                <p>Selamat datang di pusat pendataan resmi alumni SMA Bina Warga 1. Bantu sekolah melengkapi data lulusan untuk menjaga tali silaturahmi antar angkatan.</p>
-                <div class="d-flex flex-wrap gap-3">
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="btn btn-navy px-5 border border-white border-opacity-25">Masuk ke Dashboard Saya</a>
-                    @else
-                        <button @click="loginOpen = true; $nextTick(() => document.getElementById('email').focus())" class="btn btn-navy px-5 border border-white border-opacity-25">Masuk Sekarang</button>
-                        <a href="{{ route('register') }}" class="btn btn-outline-light px-5" style="border-radius: 0.75rem; padding: 0.875rem 2rem; font-weight: 600;">Daftar Alumni Baru</a>
-                    @endauth
-                </div>
-
-                <!-- Stats Preview -->
-                <div class="d-flex gap-5 mt-5 pt-3 border-top border-white border-opacity-10">
-                    <div>
-                        <div class="h4 fw-bold mb-0" style="color: var(--text-white);">4.000+</div>
-                        <div class="small text-muted-light">Alumni Terdata</div>
+    <main class="page-shell">
+        <div class="auth-card">
+            <section class="auth-side">
+                <div class="brand-box">
+                    <div class="brand-icon">
+                        <x-application-logo class="brand-logo" />
                     </div>
                     <div>
-                        <div class="h4 fw-bold mb-0" style="color: var(--text-white);">45+</div>
-                        <div class="small text-muted-light">Angkatan Tercatat</div>
+                        <p class="brand-label">SISTEM INFORMASI ALUMNI</p>
                     </div>
                 </div>
-            </div>
+                <h1 class="brand-title">Sistem Informasi Alumni SMA Bina Warga 1 Palembang</h1>
+                <p class="brand-text">Masuk menggunakan email dan password yang sama untuk Admin dan Alumni. Sistem akan otomatis mengarahkan Anda ke dashboard sesuai peran.</p>
+            </section>
 
-            <!-- Right Side: Login Card or Illustration -->
-            <div class="col-lg-5">
-                <div class="login-card" x-show="loginOpen" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="fw-bold mb-0 text-dark">Selamat Datang</h4>
-                        <button @click="loginOpen = false" class="btn-close shadow-none" style="font-size: 0.8rem;"></button>
+            <section class="login-side">
+                <div class="login-panel">
+                    <div class="login-header">
+                        <div class="login-avatar">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="login-title">Login</h2>
+                            <p class="login-subtitle">Masukkan email dan password anda untuk masuk ke sistem. Akses untuk semua pengguna.</p>
+                        </div>
                     </div>
+
+                    @if (session('status'))
+                        <div class="alert-box">{{ session('status') }}</div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert-box">{{ $errors->first() }}</div>
+                    @endif
+
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-                        <div class="mb-3 text-dark">
-                            <label class="form-label small fw-bold">Masukkan Email</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="akun@alumni.com" required>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <span class="input-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3 7.5V18C3 19.1046 3.89543 20 5 20H19C20.1046 20 21 19.1046 21 18V7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3 7.5L12 13.5L21 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                            <input id="username" type="text" name="username" class="form-control" placeholder="Masukkan email atau NIS/NISN" required autofocus>
                         </div>
-                        <div class="mb-4 text-dark">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <label class="form-label small fw-bold mb-0">Password</label>
-                                <a href="#" class="small text-decoration-none" style="color: var(--primary-navy);">Lupa Password?</a>
+
+                        <div class="form-group">
+                            <div class="action-row">
+                                <label for="password" class="form-label">Password</label>
+                                <a href="{{ route('password.request') }}" class="forgot-link">Lupa Password ?</a>
                             </div>
-                            <input type="password" name="password" class="form-control" placeholder="Masukkan Password" required>
+                            <span class="input-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 10V8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M5 10H19C20.1046 10 21 10.8954 21 12V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V12C3 10.8954 3.89543 10 5 10Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 14V17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M10.5 20H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                            <input id="password" type="password" name="password" class="form-control" placeholder="Masukkan Password anda" required>
                         </div>
-                        <button type="submit" class="btn btn-navy w-100 mb-3">Login</button>
+
+                        <button type="submit" class="btn-primary">
+                            Masuk
+                            <span class="btn-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 12H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M13 6L19 12L13 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
                     </form>
-                    <div class="text-center small text-muted">
-                        Belum punya akun? <a href="{{ route('register') }}" class="fw-bold text-decoration-none" style="color: var(--primary-navy);">Daftar di sini</a>
-                    </div>
-                </div>
 
-                <!-- Illustration Placeholder (SVG) -->
-                <div x-show="!loginOpen" class="text-center d-none d-lg-block">
-                    <svg viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="500" height="400" fill="transparent"/>
-                        <circle cx="250" cy="200" r="150" fill="white" fill-opacity="0.05"/>
-                        <path d="M150 250 L350 250 L250 100 Z" fill="white" fill-opacity="0.1"/>
-                        <circle cx="200" cy="180" r="30" fill="white" fill-opacity="0.2"/>
-                        <circle cx="300" cy="220" r="20" fill="white" fill-opacity="0.3"/>
-                        <rect x="230" y="240" width="40" height="60" rx="5" fill="white" fill-opacity="0.1"/>
-                    </svg>
-                    <p class="small text-muted-light italic">"Menghubungkan masa lalu dengan peluang masa depan."</p>
+                    <p class="login-note">Belum punya akun? <a href="{{ route('register') }}">Registrasi Alumni</a></p>
                 </div>
-            </div>
+            </section>
         </div>
-    </div>
-</section>
-
-<!-- Fitur Section -->
-<section class="py-5 bg-navy-dark border-top border-bottom" style="background-color: var(--bg-navy-dark); border-color: rgba(255, 255, 255, 0.05) !important;">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold fs-3 text-white">Sistem Pendataan Terpadu</h2>
-            <p class="text-muted-light">Fitur untuk memudahkan pengelolaan dan pencarian data alumni.</p>
-        </div>
-        <div class="row g-4 justify-content-center">
-            <div class="col-md-5">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-person-lines-fill"></i>📝</div>
-                    <h5 class="fw-bold text-dark">Update Data Diri</h5>
-                    <p class="small text-muted mb-0">Perbarui informasi kontak dan pekerjaan terbaru Anda untuk kelengkapan database sekolah.</p>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-search"></i>🔍</div>
-                    <h5 class="fw-bold text-dark">Direktori Pencarian</h5>
-                    <p class="small text-muted mb-0">Temukan teman seangkatan atau kakak kelas dengan mudah melalui sistem pencarian direktori yang komprehensif.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer>
-    <div class="container text-center">
-        <span class="footer-brand">SMA Bina Warga 1 Palembang</span>
-        <p class="small text-muted-light">Sistem Informasi Alumni & Karir Profesional</p>
-        <div class="d-flex justify-content-center gap-3 mt-4">
-            <a href="#" class="text-white opacity-75"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="text-white opacity-75"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="text-white opacity-75"><i class="bi bi-linkedin"></i></a>
-        </div>
-        <div class="mt-5 pt-3 border-top border-white border-opacity-10">
-            <p class="small text-muted-light mb-0">&copy; 2026 Ikatan Alumni SMA Bina Warga 1. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
-
-<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </main>
+</body>
+</html>

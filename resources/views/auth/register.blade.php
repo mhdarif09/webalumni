@@ -1,311 +1,479 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Registrasi Alumni Baru - Sistem Informasi Alumni SMA Bina Warga 1 Palembang</title>
 
-@section('content')
-<style>
-    :root {
-        --primary-navy: #34495E;
-        --accent-navy-hover: #2C3E50;
-        --border-color: #E2E8F0;
-        --bg-light: #F8FAFC;
-    }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    body {
-        background-color: var(--primary-navy) !important;
-        background-image: radial-gradient(circle at 100% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
-        font-family: 'Inter', sans-serif;
-    }
-
-    .register-container {
-        padding: 4rem 1rem;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .header-section {
-        text-align: center;
-        margin-bottom: 3.5rem;
-        color: white;
-    }
-
-    .header-section h1 {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 800;
-        font-size: 2.5rem;
-        letter-spacing: -0.025em;
-        margin-bottom: 0.5rem;
-    }
-
-    .header-section p {
-        opacity: 0.8;
-        font-size: 1rem;
-    }
-
-    /* Style Tabel Kecil / Card */
-    .form-card {
-        background: white;
-        border-radius: 1.25rem;
-        padding: 2.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .card-label {
-        font-family: 'Outfit', sans-serif;
-        font-weight: 700;
-        color: var(--primary-navy);
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 2rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .card-label::after {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: #f1f5f9;
-    }
-
-    /* Grid System for Alignment */
-    .form-row {
-        display: grid;
-        grid-template-columns: 220px 1fr;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .form-row:last-child {
-        margin-bottom: 0;
-    }
-
-    .field-label {
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: #475569;
-    }
-
-    .form-control {
-        width: 100%;
-        border: 1px solid var(--border-color);
-        padding: 0.75rem 1.25rem;
-        border-radius: 0.75rem;
-        font-size: 0.95rem;
-        background-color: var(--bg-light);
-        transition: all 0.2s ease;
-        color: #1e293b;
-    }
-
-    .form-control:focus {
-        border-color: var(--primary-navy);
-        background-color: white;
-        box-shadow: 0 0 0 4px rgba(52, 73, 94, 0.1);
-        outline: none;
-    }
-
-    /* Custom Radio Styling */
-    .radio-group {
-        display: flex;
-        gap: 2.5rem;
-    }
-
-    .radio-item {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .radio-item input[type="radio"] {
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        border: 2px solid #cbd5e1;
-        border-radius: 50%;
-        margin-right: 10px;
-        position: relative;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .radio-item input[type="radio"]:checked {
-        border-color: var(--primary-navy);
-    }
-
-    .radio-item input[type="radio"]:checked::after {
-        content: "";
-        width: 10px;
-        height: 10px;
-        background: var(--primary-navy);
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .radio-text {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: #1e293b;
-    }
-
-    .btn-registrasi {
-        background-color: white;
-        color: var(--primary-navy);
-        border: none;
-        padding: 1.25rem;
-        border-radius: 1rem;
-        width: 100%;
-        font-family: 'Outfit', sans-serif;
-        font-weight: 800;
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        margin-top: 1rem;
-    }
-
-    .btn-registrasi:hover {
-        background-color: #f8fafc;
-        transform: translateY(-3px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
-    .footer-links {
-        text-align: center;
-        margin-top: 2rem;
-        color: white;
-        font-size: 0.9rem;
-        opacity: 0.8;
-    }
-
-    .footer-links a {
-        color: white;
-        font-weight: 700;
-        text-decoration: underline;
-        text-underline-offset: 4px;
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 640px) {
-        .form-row {
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
+    <style>
+        :root {
+            --bg-page: #F3F4F6;
+            --bg-panel: #FFFFFF;
+            --bg-panel-soft: #F3F4F6;
+            --border-color: #D1D5DB;
+            --text-strong: #111827;
+            --text-secondary: #6B7280;
+            --primary: #1E3A8A;
+            --primary-hover: #172E6F;
+            --radius: 20px;
         }
-        .register-container {
-            padding: 2rem 1rem;
-        }
-    }
-</style>
 
-<div class="register-container">
-    <div class="header-section">
-        <h1>Registrasi Alumni</h1>
-        <p>Silakan lengkapi biodata Anda pada tabel berikut secara detail.</p>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-strong);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .register-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .register-card {
+            width: min(100%, 1120px);
+            display: grid;
+            grid-template-columns: 35% 65%;
+            border-radius: 28px;
+            overflow: hidden;
+            background: var(--bg-panel);
+            box-shadow: 0 32px 80px rgba(17, 24, 39, 0.08);
+        }
+
+        .register-sidebar {
+            background: var(--bg-panel-soft);
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .sidebar-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at top right, rgba(30, 64, 175, 0.08), transparent 24%),
+                              radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.08), transparent 20%);
+            pointer-events: none;
+        }
+
+        .sidebar-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-logo {
+            width: 96px;
+            height: 96px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            display: grid;
+            place-items: center;
+            margin: 0 auto 1.75rem;
+            box-shadow: 0 18px 40px rgba(30, 64, 175, 0.15);
+        }
+
+        .sidebar-logo svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+        }
+
+        .sidebar-title {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-heading {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.8rem, 2.3vw, 2.5rem);
+            line-height: 1.05;
+            font-weight: 700;
+            color: var(--text-strong);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-description {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.9;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .register-panel {
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+        }
+
+        .register-form {
+            width: 100%;
+            max-width: 520px;
+            background: var(--bg-panel);
+            border-radius: 24px;
+            border: 1px solid rgba(209, 213, 219, 0.75);
+            box-shadow: 0 22px 45px rgba(15, 23, 42, 0.06);
+            padding: 2.5rem;
+        }
+
+        .register-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .register-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: rgba(30, 64, 175, 0.12);
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .register-title {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-strong);
+        }
+
+        .register-description {
+            margin: 0.5rem 0 0;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .register-note {
+            margin: 0.75rem 0 0;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.35rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-strong);
+        }
+
+        .form-control {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #F9FAFB;
+            padding: 1rem 1rem 1rem 3.5rem;
+            font-size: 0.95rem;
+            color: var(--text-strong);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-control:hover,
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            display: grid;
+            place-items: center;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .input-icon i,
+        .input-icon svg {
+            display: block;
+            line-height: 1;
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .input-group-password {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+        }
+
+        .form-select {
+            border-radius: 12px;
+            padding-left: 3.5rem;
+            padding-right: 1rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            background: #F9FAFB;
+        }
+
+        .radio-wrapper input {
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .radio-wrapper:hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .submit-row {
+            margin-top: 1.5rem;
+        }
+
+        .btn-submit {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem 1.15rem;
+            background: var(--primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 18px 36px rgba(30, 64, 175, 0.18);
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .login-link {
+            margin-top: 1rem;
+            display: block;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .field-error {
+            margin-top: 0.5rem;
+            color: #dc2626;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 991.98px) {
+            .register-card {
+                grid-template-columns: 1fr;
+            }
+
+            .register-sidebar,
+            .register-panel {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .register-shell {
+                padding: 1rem;
+            }
+
+            .register-sidebar {
+                padding: 1.75rem;
+            }
+
+            .register-panel {
+                padding: 1.75rem;
+            }
+
+            .register-card {
+                border-radius: 24px;
+            }
+
+            .brand-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-shell">
+        <div class="register-card">
+            <aside class="register-sidebar">
+                <div class="sidebar-pattern"></div>
+                <div class="sidebar-content">
+                    <div class="sidebar-logo">
+                        <x-application-logo class="brand-logo" />
+                    </div>
+                    <div class="sidebar-title">SISTEM INFORMASI ALUMNI</div>
+                    <h1 class="sidebar-heading">SMA BINA WARGA 1 PALEMBANG</h1>
+                    <p class="sidebar-description">Buat akun alumni Anda untuk mengakses layanan data pribadi, karir, dan informasi alumni secara terpusat.</p>
+                </div>
+            </aside>
+
+            <section class="register-panel">
+                <div class="register-form">
+                    <div class="register-header">
+                        <div class="register-icon">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <h2 class="register-title">Registrasi Alumni Baru</h2>
+                            <p class="register-description">Silakan lengkapi data berikut untuk membuat akun baru pada Sistem Informasi Alumni SMA Bina Warga 1 Palembang.</p>
+                            <p class="register-note">Semua data wajib diisi.</p>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ route('register') }}" novalidate>
+                        @csrf
+
+                        <div class="form-group">
+                            <label for="name" class="form-label">Nama Lengkap</label>
+                            <span class="input-icon"><i class="fa-regular fa-user"></i></span>
+                            <input id="name" type="text" name="name" class="form-control" placeholder="Masukkan nama lengkap" value="{{ old('name') }}" required>
+                            @error('name')<div class="field-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username / NISN</label>
+                            <span class="input-icon"><i class="fa-regular fa-id-badge"></i></span>
+                            <input id="username" type="text" name="username" class="form-control" placeholder="Masukkan username atau NISN" value="{{ old('username') }}" required>
+                            @error('username')<div class="field-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+                            <input id="email" type="email" name="email" class="form-control" placeholder="Masukkan email" value="{{ old('email') }}" required>
+                            @error('email')<div class="field-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+                            <div class="input-group-password">
+                                <input id="password" type="password" name="password" class="form-control" placeholder="Masukkan password" required>
+                                <button type="button" class="toggle-password" data-target="password"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                            @error('password')<div class="field-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+                            <div class="input-group-password">
+                                <input id="password_confirmation" type="password" name="password_confirmation" class="form-control" placeholder="Konfirmasi password" required>
+                                <button type="button" class="toggle-password" data-target="password_confirmation"><i class="fa-solid fa-eye"></i></button>
+                            </div>
+                            @error('password_confirmation')<div class="field-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="submit-row">
+                            <button type="submit" class="btn-submit">
+                                <i class="fa-solid fa-user-plus"></i>
+                                Daftar Sekarang
+                            </button>
+                        </div>
+                    </form>
+
+                    <p class="login-link">Sudah memiliki akun? <a href="{{ route('login') }}">Masuk sekarang</a></p>
+                </div>
+            </section>
+        </div>
     </div>
 
-    <form action="{{ route('register') }}" method="POST" x-data="{ password: '', confirm: '' }">
-        @csrf
-
-        <!-- Card 1: Identitas Pribadi -->
-        <div class="form-card">
-            <div class="card-label">Identitas Alumni</div>
-            
-            <div class="form-row">
-                <label class="field-label">Nama Lengkap Alumni</label>
-                <input type="text" name="name" class="form-control" placeholder="Adinda Aulia Salsabilla" required>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Jenis Kelamin</label>
-                <div class="radio-group">
-                    <label class="radio-item">
-                        <input type="radio" name="jenis_kelamin" value="Laki-laki" required>
-                        <span class="radio-text">Laki-laki</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="jenis_kelamin" value="Perempuan">
-                        <span class="radio-text">Perempuan</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Jurusan Sekolah</label>
-                <div class="radio-group">
-                    <label class="radio-item">
-                        <input type="radio" name="jurusan" value="IPA" required>
-                        <span class="radio-text">IPA</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="jurusan" value="IPS">
-                        <span class="radio-text">IPS</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 2: Kelahiran & Akademik -->
-        <div class="form-card">
-            <div class="card-label">Pendidikan & Kelahiran</div>
-
-            <div class="form-row">
-                <label class="field-label">Tempat Lahir</label>
-                <input type="text" name="tempat_lahir" class="form-control" placeholder="Palembang" required>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Tanggal Lahir</label>
-                <input type="date" name="tanggal_lahir" class="form-control" required>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Tahun Masuk Sekolah</label>
-                <input type="number" name="tahun_masuk" class="form-control" placeholder="2019" required>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Tahun Kelulusan</label>
-                <input type="number" name="tahun_lulus" class="form-control" placeholder="2022" required>
-            </div>
-        </div>
-
-        <!-- Card 3: Keamanan Akun -->
-        <div class="form-card">
-            <div class="card-label">Kredensial Login</div>
-
-            <div class="form-row">
-                <label class="field-label">Alamat Email Aktif</label>
-                <input type="email" name="email" class="form-control" placeholder="adinsalsabilla18@gmail.com" required>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Buat Password</label>
-                <input type="password" name="password" x-model="password" class="form-control" placeholder="**********" required>
-            </div>
-
-            <div class="form-row">
-                <label class="field-label">Konfirmasi Password</label>
-                <div>
-                    <input type="password" name="password_confirmation" x-model="confirm" class="form-control" placeholder="Konfirmasi Password" required>
-                    <template x-if="confirm && password !== confirm">
-                        <p class="text-danger fw-bold small mt-2">Password tidak cocok!</p>
-                    </template>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Button -->
-        <a href="{{ route('dashboard') }}" class="btn-registrasi" style="display: block; text-align: center; text-decoration: none;">REGISTRASI SEKARANG</a>
-
-        <div class="footer-links">
-            Sudah terdaftar? <a href="{{ route('login') }}">Klik untuk Login</a>
-        </div>
-    </form>
-</div>
-@endsection
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', () => {
+                const target = document.getElementById(button.dataset.target);
+                const icon = button.querySelector('i');
+                if (target.type === 'password') {
+                    target.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    target.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

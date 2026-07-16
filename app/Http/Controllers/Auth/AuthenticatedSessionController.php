@@ -28,7 +28,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Admin/Alumni Role Redirection
         if ($request->user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
